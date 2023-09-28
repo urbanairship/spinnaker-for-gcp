@@ -70,7 +70,7 @@ bold "Copying ~/.kube/config into ~/.hal/default/credentials/$KUBECONFIG_FILENAM
 
 cp ~/.kube/config ~/.hal/default/credentials/$KUBECONFIG_FILENAME
 
-~/hal/hal config provider kubernetes account add $GKE_ACCOUNT_NAME \
+hal config provider kubernetes account add $GKE_ACCOUNT_NAME \
   --provider-version v2 \
   --context $TARGET_K8S_CONTEXT \
   --kubeconfig-file ~/.hal/default/credentials/$KUBECONFIG_FILENAME

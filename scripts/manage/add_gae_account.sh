@@ -41,8 +41,8 @@ for r in "${GAE_REQUIRED_ROLES[@]}"; do
   fi
 done
 
-~/hal/hal config provider appengine enable
-~/hal/hal config provider appengine account add $GAE_ACCOUNT_NAME --project $MANAGED_PROJECT_ID
+hal config provider appengine enable
+hal config provider appengine account add $GAE_ACCOUNT_NAME --project $MANAGED_PROJECT_ID
 
 bold "Remember that your configuration changes have only been made locally."
 bold "They must be pushed and applied to your deployment to take effect:"

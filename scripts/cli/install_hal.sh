@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "DON'T USE THIS TO INSTALL HALYARD"
+exit 1
+
 HALYARD_DAEMON_PID_FILE=~/hal/halyard/pid
 
 function kill_daemon() {

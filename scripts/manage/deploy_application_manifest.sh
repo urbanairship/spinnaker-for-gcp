@@ -31,7 +31,10 @@ cat $PARENT_DIR/spinnaker-for-gcp/templates/spinnaker_application_manifest_top.y
   | envsubst | kubectl apply -f -
 
 bold "Labeling resources as components of application $DEPLOYMENT_NAME..."
-kubectl label service --overwrite -n spinnaker spin-clouddriver app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label service --overwrite -n spinnaker spin-clouddriver-caching app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label service --overwrite -n spinnaker spin-clouddriver-ro app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label service --overwrite -n spinnaker spin-clouddriver-ro-deck app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label service --overwrite -n spinnaker spin-clouddriver-rw app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 kubectl label service --overwrite -n spinnaker spin-deck app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 kubectl label service --overwrite -n spinnaker spin-echo app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 kubectl label service --overwrite -n spinnaker spin-front50 app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
@@ -41,7 +44,10 @@ kubectl label service --overwrite -n spinnaker spin-kayenta app.kubernetes.io/na
 kubectl label service --overwrite -n spinnaker spin-orca app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 kubectl label service --overwrite -n spinnaker spin-rosco app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 
-kubectl label deployment --overwrite -n spinnaker spin-clouddriver app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label deployment --overwrite -n spinnaker spin-clouddriver-caching app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label deployment --overwrite -n spinnaker spin-clouddriver-ro app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label deployment --overwrite -n spinnaker spin-clouddriver-ro-deck app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
+kubectl label deployment --overwrite -n spinnaker spin-clouddriver-rw app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 kubectl label deployment --overwrite -n spinnaker spin-deck app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 kubectl label deployment --overwrite -n spinnaker spin-echo app.kubernetes.io/name=$DEPLOYMENT_NAME -o name
 kubectl label deployment --overwrite -n spinnaker spin-front50 app.kubernetes.io/name=$DEPLOYMENT_NAME -o name

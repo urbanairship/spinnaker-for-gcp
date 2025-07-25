@@ -1,0 +1,72 @@
+name: Update Spinnaker kube config files
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ua-ops-deploy
+
+jobs:
+  pull-config:
+    runs-on: [ self-hosted, ubuntu ]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # spinnaker@ua-ops-deploy.iam.gserviceaccount.com service account is using here
+      - name: Authenticate to GCP with spinnaker credentials
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.SPINNAKER_SA_KEY }}
+
+      - name: Check cluster config
+        run: PROJECT_ID=ua-ops-deploy ./scripts/manage/check_cluster_config.sh
+
+      - name: Pull full config
+        run: ./scripts/manage/pull_config.sh
+
+      - name: Copy only YAML files
+        run: cp -v .hal/default/profiles/*.yml profiles/
+
+      - name: Commit and Push Changes to Master
+        run: |
+          git config user.name "infra-source"
+          git config user.email "infra-source@airship.com"
+          git add profiles/
+          git commit -m "Update Spinnaker profiles configuration"
+          git push origin master
+
+  wait-for-manual-approval:
+    needs: pull-config
+    runs-on: [ self-hosted, ubuntu ]
+    environment:
+      name: prod
+    steps:
+      - name: Pause for manual update
+        run: |
+          echo "The YAML profile files have been pulled and committed."
+
+  push-config:
+    needs: wait-for-manual-approval
+    runs-on: [ self-hosted, ubuntu ]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # spinnaker@ua-ops-deploy.iam.gserviceaccount.com service account is using here
+      - name: Authenticate to GCP with spinnaker credentials
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.SPINNAKER_SA_KEY }}
+
+      - name: Check cluster config
+        run: PROJECT_ID=ua-ops-deploy ./scripts/manage/check_cluster_config.sh
+
+      - name: Pull full config
+        run: ./scripts/manage/pull_config.sh
+
+      - name: Copy only YAML files
+        run: cp -v profiles/*.yml .hal/default/profiles/
+
+      - name: Push and apply config
+        run: ./scripts/manage/push_and_apply.sh
